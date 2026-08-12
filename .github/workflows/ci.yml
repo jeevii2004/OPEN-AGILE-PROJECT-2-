@@ -32,7 +32,7 @@ jobs:
           test -f backup/hello.sh
           echo "Backup verification successful!"
 
-       - name: Generate automated report
+      - name: Generate automated report
         if: always()
         run: |
           chmod +x scripts/generate_report.sh
