@@ -1,0 +1,29 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+  schedule:
+    - cron: "*/5 * * * *"
+
+jobs:
+  backup-job:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run backup script
+        run: |
+          chmod +x scripts/backup.sh
+          ./scripts/backup.sh
+
+      - name: Check backup
+        run: |
+          test -f backup/hello.sh
+          echo "Backup verification successful!"
