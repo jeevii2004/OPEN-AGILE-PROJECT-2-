@@ -41,3 +41,4 @@ echo ""
 echo "======================================"
 echo "Report generation completed."
 echo "======================================"
+# Final integration test
