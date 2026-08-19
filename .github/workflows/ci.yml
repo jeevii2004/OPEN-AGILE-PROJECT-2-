@@ -49,6 +49,11 @@ jobs:
           grep -q "Errors detected:" reports/log_report.txt
           grep -q "Warnings detected:" reports/log_report.txt
           echo "Log monitoring test passed!"
+      - name: Generate prompt-based report
+        if: always()
+        run: |
+          chmod +x scripts/prompt_report.sh
+          ./scripts/prompt_report.sh
 
       - name: Report SUCCESS to Issue #5
         if: success()
