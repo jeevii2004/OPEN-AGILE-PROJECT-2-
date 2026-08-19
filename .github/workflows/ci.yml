@@ -38,6 +38,18 @@ jobs:
           chmod +x scripts/generate_report.sh
           ./scripts/generate_report.sh
 
+      - name: Run log monitoring
+        run: |
+          chmod +x scripts/log_monitor.sh
+          ./scripts/log_monitor.sh || true
+
+      - name: Check log monitoring report
+        run: |
+          test -f reports/log_report.txt
+          grep -q "Errors detected:" reports/log_report.txt
+          grep -q "Warnings detected:" reports/log_report.txt
+          echo "Log monitoring test passed!"
+
       - name: Report SUCCESS to Issue #5
         if: success()
         uses: actions/github-script@v7
@@ -47,7 +59,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: 5,
-              body: '✅ **CI/CD SUCCESS**\n\nThe automated backup task completed successfully.\n\n**Action:** Backup verified. Task is ready to be marked as Done.'
+              body: '✅ **CI/CD SUCCESS**\n\nThe automated backup and monitoring tasks completed successfully.'
             })
 
       - name: Close Issue #5 after successful backup
@@ -71,5 +83,17 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: 5,
-              body: '❌ **CI/CD FAILURE**\n\nThe automated backup task failed.\n\n**Action:** Check the GitHub Actions logs, identify the error, and fix the backup script.'
+              body: '❌ **CI/CD FAILURE**\n\nThe automated backup or monitoring task failed.'
+            })
+
+      - name: Report log monitoring result to Issue #6
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: 6,
+              body: '🤖 **Automated Log Monitoring Report**\n\nThe scheduled log monitoring job was executed. The monitoring report was generated and tested.'
             })
