@@ -1,0 +1,4 @@
+Log Monitoring Report
+============
+Errors detected: 1
+Warnings detected: 1
